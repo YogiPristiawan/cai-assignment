@@ -1,12 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "ES6"
-    ],
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext", "ES2017"],
     "allowJs": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
@@ -27,18 +22,10 @@
       }
     ],
     "paths": {
-      "@src/*": [
-        "./src/*"
-      ]
+      "@src/*": ["./src/*"]
     }
   },
-  "include": [
-    "src/**/*.ts",
-    "bin/*.ts",
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts",
-    "**/*.test.ts"
-  ]
+  "include": ["./*.ts", "src/**/*.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"]
 }
+
