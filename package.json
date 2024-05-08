@@ -1,0 +1,8 @@
+{
+  "name": "concrete-api-assessment",
+  "version": "1.0.0",
+  "description": "Bakcend Developer Concrete API Assignment",
+  "main": "index.ts",
+  "author": "yogipristiawan@gmail.com",
+  "license": "MIT"
+}

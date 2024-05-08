@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "ES6"
+    ],
+    "allowJs": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "skipLibCheck": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "rootDir": ".",
+    "plugins": [
+      {
+        "transform": "typescript-transform-paths"
+      }
+    ],
+    "paths": {
+      "@src/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "bin/*.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
+}
