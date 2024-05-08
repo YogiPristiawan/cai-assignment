@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
-    "outDir": "./dist",
+    "outDir": "users/dist",
     "baseUrl": ".",
     "rootDir": ".",
     "plugins": [
@@ -22,10 +22,9 @@
       }
     ],
     "paths": {
-      "@src/*": ["./src/*"]
+      "@src/*": ["users/src/*"]
     }
   },
-  "include": ["./*.ts", "src/**/*.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"]
+  "include": ["./*.ts", "users/src/**/*.ts"],
+  "exclude": ["users/node_modules", "**/*.spec.ts", "**/*.test.ts"]
 }
-
