@@ -2,11 +2,14 @@ import dotenv from "dotenv";
 import fastify from "fastify";
 import cors from "@fastify/cors";
 import formDataParser from "@fastify/formbody";
+import { findAccounts } from "@src/presentation/account";
 
 import SupertokensEmailPassword from "supertokens-node/recipe/emailpassword";
 import Session from "supertokens-node/recipe/session";
 import { plugin as supertokenPlugin } from "supertokens-node/framework/fastify";
 import supertokens from "supertokens-node";
+import { verifySession } from "supertokens-node/recipe/session/framework/fastify";
+import { SessionRequest } from "supertokens-node/lib/build/framework/fastify";
 
 dotenv.config();
 
@@ -30,7 +33,6 @@ supertokens.init({
           return {
             ...originalImplementation,
             signUp: async function (input) {
-              console.log("hii i am running");
               let response = await originalImplementation.signUp(input);
 
               if (
@@ -66,11 +68,17 @@ server.get("/ping", async (req, reply) => {
     .send({ message: "pong" });
 });
 
-server.listen({ port: 3000 }, (err, address) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
+// TODO: split into another file
+server.get("/accounts", { preHandler: verifySession() }, findAccounts);
 
-  console.log(`server listening add ${address}`);
-});
+server.listen(
+  { port: process.env.APP_PORT ? Number(process.env.APP_PORT) : 3000 },
+  (err, address) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+
+    console.log(`server listening add ${address}`);
+  },
+);

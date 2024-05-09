@@ -22,7 +22,7 @@
       }
     ],
     "paths": {
-      "@src/*": ["users/src/*"]
+      "@src/*": ["src/*"]
     }
   },
   "include": ["./*.ts", "users/src/**/*.ts"],
