@@ -4,6 +4,8 @@ import {
   SendPaymentIn,
   SendPaymentOut,
   UpdateTransactionStatusIn,
+  WithdrawIn,
+  WithdrawOut,
 } from "@src/model/transaction";
 import { TransactionStatus } from "@src/primitive/transaction";
 
@@ -33,6 +35,15 @@ class TransactionRepo {
     return {
       transactionId: "321",
       amount: 20000,
+      status: TransactionStatus.Pending,
+    };
+  }
+
+  public withdraw(param: WithdrawIn): WithdrawOut {
+    // TODO: Implement db. make the teransaction default to pending
+    return {
+      transactionId: "345",
+      amount: 10000,
       status: TransactionStatus.Pending,
     };
   }

@@ -19,5 +19,14 @@ export type SendPaymentIn = {
 export type SendPaymentOut = {
   transactionId: string;
   amount: number;
-  status: TransactionStatus;
+};
+
+export type WithdrawIn = {
+  amount: number;
+  accountId: string;
+};
+
+export type WithdrawOut = {
+  transactionId: string;
+  amount: number;
 };

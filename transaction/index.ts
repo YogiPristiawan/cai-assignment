@@ -2,8 +2,16 @@ import dotenv from "dotenv";
 import fastify from "fastify";
 import cors from "@fastify/cors";
 import formDataParser from "@fastify/formbody";
-import { CreateDepositIn, SendPaymentIn } from "@src/dto/transaction";
-import { createDeposit, sendPayment } from "@src/presentation/transaction";
+import {
+  CreateDepositIn,
+  SendPaymentIn,
+  WithdrawIn,
+} from "@src/dto/transaction";
+import {
+  createDeposit,
+  sendPayment,
+  withdraw,
+} from "@src/presentation/transaction";
 
 import Session from "supertokens-node/recipe/session";
 import { plugin as supertokenPlugin } from "supertokens-node/framework/fastify";
@@ -53,6 +61,12 @@ server.post<{ Body: SendPaymentIn }>(
   "/send",
   { preHandler: verifySession() },
   sendPayment,
+);
+
+server.post<{ Body: WithdrawIn }>(
+  "/withdraw",
+  { preHandler: verifySession() },
+  withdraw,
 );
 
 server.listen(
