@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext", "ES2017"],
+    "allowJs": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "skipLibCheck": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "outDir": "users/dist",
+    "baseUrl": ".",
+    "rootDir": ".",
+    "plugins": [
+      {
+        "transform": "typescript-transform-paths"
+      }
+    ],
+    "paths": {
+      "@src/*": ["src/*"]
+    }
+  },
+  "include": ["./*.ts", "users/src/**/*.ts"],
+  "exclude": ["users/node_modules", "**/*.spec.ts", "**/*.test.ts"]
+}
