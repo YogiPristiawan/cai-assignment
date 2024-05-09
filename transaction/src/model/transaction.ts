@@ -16,3 +16,15 @@ export type UpdateTransactionStatusIn = {
   transactionId: string;
   status: TransactionStatus;
 };
+
+export type SendPaymentIn = {
+  userId: string;
+  amount: number;
+  accountId: string;
+};
+
+export type SendPaymentOut = {
+  transactionId: string;
+  amount: number;
+  status: TransactionStatus;
+};

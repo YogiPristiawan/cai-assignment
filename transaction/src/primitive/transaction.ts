@@ -9,3 +9,9 @@ export enum TransactionAccountType {
   Debit = "debit",
   Loan = "loan",
 }
+
+export enum TransactionType {
+  Deposit = "deposit",
+  Payment = "payment",
+  Withdraw = "withdraw",
+}

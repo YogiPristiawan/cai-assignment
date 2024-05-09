@@ -47,7 +47,7 @@ export default class CreateDeposit {
 
     // call account service
     try {
-      // NOTE: would be better if we send to MQ instead of synchronous call like this
+      // NOTE: would be better if we send it to MQ instead of synchronous call like this
       await this._accountRepo.createDeposit({
         userId: userId,
         transactionId: transaction.transactionId,
