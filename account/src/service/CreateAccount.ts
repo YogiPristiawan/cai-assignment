@@ -1,6 +1,6 @@
 import { User } from "supertokens-node/lib/build/types";
 import {
-  CreateAcccountIn as ModelCreateAccountIn,
+  CreateAccountIn as ModelCreateAccountIn,
   CreateAccountOut as ModelCreateAccountOut,
 } from "@src/model/account";
 

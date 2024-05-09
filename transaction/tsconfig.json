@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
-    "outDir": "users/dist",
+    "outDir": "./dist",
     "baseUrl": ".",
     "rootDir": ".",
     "plugins": [

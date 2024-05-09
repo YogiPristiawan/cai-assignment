@@ -2,8 +2,9 @@ import dotenv from "dotenv";
 import fastify from "fastify";
 import cors from "@fastify/cors";
 import formDataParser from "@fastify/formbody";
+import { CreateDepositIn } from "@src/dto/transaction";
+import { createDeposit } from "@src/presentation/transaction";
 
-import SupertokensEmailPassword from "supertokens-node/recipe/emailpassword";
 import Session from "supertokens-node/recipe/session";
 import { plugin as supertokenPlugin } from "supertokens-node/framework/fastify";
 import supertokens from "supertokens-node";
@@ -40,6 +41,12 @@ server.get("/ping", async (req, reply) => {
     .header("Content-Type", "application/json")
     .send({ message: "pong" });
 });
+
+server.post<{ Body: CreateDepositIn }>(
+  "/deposit",
+  { preHandler: verifySession() },
+  createDeposit,
+);
 
 server.listen(
   { port: process.env.APP_PORT ? Number(process.env.APP_PORT) : 3000 },
