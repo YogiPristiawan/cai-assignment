@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URL")
+}
+
+enum TransactionStatus {
+  pending
+  success
+  failed
+}
+
+enum TransactionType {
+  deposit
+  payment
+  withdraw
+}
+
+model Transaction {
+  id        String            @id @default(uuid()) @db.Uuid
+  userId    String            @db.Uuid
+  accountId String            @db.Uuid
+  amount    Decimal
+  type      TransactionType
+  status    TransactionStatus @default(pending)
+
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  @@index([userId, accountId])
+  @@index([accountId])
+  @@index([createdAt])
+  @@map("transactions")
+}

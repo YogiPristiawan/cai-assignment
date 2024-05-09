@@ -9,6 +9,8 @@ import {
 } from "@src/model/transaction";
 import { TransactionStatus } from "@src/primitive/transaction";
 
+import db from "@src/pkg/prisma";
+
 class TransactionRepo {
   private static _instance: TransactionRepo;
 
@@ -20,12 +22,23 @@ class TransactionRepo {
     return TransactionRepo._instance;
   }
 
-  public createDeposit(param: CreateDepositIn): CreateDepositOut {
-    // TODO: implement db. make transaction as pending
+  public async createDeposit(
+    param: CreateDepositIn,
+  ): Promise<CreateDepositOut> {
+    const createdDeposit = await db.transaction.create({
+      data: {
+        userId: param.userId,
+        accountId: param.accountId,
+        status: "pending",
+        type: "deposit",
+        amount: param.amount,
+      },
+    });
+
     return {
-      transactionId: "123",
-      amount: 500000,
-      status: TransactionStatus.Pending,
+      transactionId: createdDeposit.id,
+      amount: createdDeposit.amount.toNumber(),
+      status: createdDeposit.status,
     };
   }
 
@@ -35,7 +48,7 @@ class TransactionRepo {
     return {
       transactionId: "321",
       amount: 20000,
-      status: TransactionStatus.Pending,
+      status: "pending",
     };
   }
 
@@ -44,11 +57,22 @@ class TransactionRepo {
     return {
       transactionId: "345",
       amount: 10000,
-      status: TransactionStatus.Pending,
+      status: "pending",
     };
   }
 
-  public updateTransactionStatus(param: UpdateTransactionStatusIn): void {}
+  public async updateTransactionStatus(
+    param: UpdateTransactionStatusIn,
+  ): Promise<void> {
+    await db.transaction.update({
+      where: {
+        id: param.transactionId,
+      },
+      data: {
+        status: param.status,
+      },
+    });
+  }
 }
 
 export default TransactionRepo.getInstance();

@@ -1,17 +1,8 @@
-export enum TransactionStatus {
-  Pending = "pending",
-  Success = "success",
-  Failed = "failed",
-}
+import {
+  TransactionStatus as PrismaTransactionStatus,
+  TransactionType as PrismaTransactionType,
+} from "@prisma/client";
 
-export enum TransactionAccountType {
-  Credit = "credit",
-  Debit = "debit",
-  Loan = "loan",
-}
+export type TransactionStatus = PrismaTransactionStatus;
 
-export enum TransactionType {
-  Deposit = "deposit",
-  Payment = "payment",
-  Withdraw = "withdraw",
-}
+export type TransactonType = PrismaTransactionType;

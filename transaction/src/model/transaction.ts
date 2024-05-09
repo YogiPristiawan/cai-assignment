@@ -1,7 +1,4 @@
-import {
-  TransactionAccountType,
-  TransactionStatus,
-} from "../primitive/transaction";
+import { TransactionStatus } from "../primitive/transaction";
 
 export type CreateDepositIn = {
   userId: string;

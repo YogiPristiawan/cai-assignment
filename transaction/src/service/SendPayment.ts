@@ -56,12 +56,12 @@ export default class SendPayment {
 
       this._transactionRepo.updateTransactionStatus({
         transactionId: transaction.transactionId,
-        status: TransactionStatus.Success,
+        status: "success",
       });
     } catch (err) {
       this._transactionRepo.updateTransactionStatus({
         transactionId: transaction.transactionId,
-        status: TransactionStatus.Failed,
+        status: "failed",
       });
     }
 

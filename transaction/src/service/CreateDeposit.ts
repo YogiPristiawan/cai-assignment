@@ -10,11 +10,10 @@ import {
 } from "@src/model/account";
 import { CreateDepositIn, CreateDepositOut } from "@src/dto/transaction";
 import { BadRequestError } from "../primitive/error";
-import { TransactionStatus } from "@src/primitive/transaction";
 
 interface ITransactionRepo {
-  createDeposit(param: ModelCreateDepositIn): ModelCreateDepositOut;
-  updateTransactionStatus(param: ModelUpdateTransactionStatusIn): void;
+  createDeposit(param: ModelCreateDepositIn): Promise<ModelCreateDepositOut>;
+  updateTransactionStatus(param: ModelUpdateTransactionStatusIn): Promise<void>;
 }
 
 interface IAccountRepo {
@@ -39,7 +38,7 @@ export default class CreateDeposit {
     this.validatePayload(payload);
 
     // save transaction
-    const transaction = this._transactionRepo.createDeposit({
+    const transaction = await this._transactionRepo.createDeposit({
       userId: userId,
       accountId: payload.accountId,
       amount: payload.amount,
@@ -55,14 +54,14 @@ export default class CreateDeposit {
         amount: payload.amount,
       });
 
-      this._transactionRepo.updateTransactionStatus({
+      await this._transactionRepo.updateTransactionStatus({
         transactionId: transaction.transactionId,
-        status: TransactionStatus.Success,
+        status: "success",
       });
     } catch (err) {
-      this._transactionRepo.updateTransactionStatus({
+      await this._transactionRepo.updateTransactionStatus({
         transactionId: transaction.transactionId,
-        status: TransactionStatus.Failed,
+        status: "failed",
       });
     }
 

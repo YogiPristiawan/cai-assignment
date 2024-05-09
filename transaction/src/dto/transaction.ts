@@ -1,4 +1,4 @@
-import { TransactionStatus, TransactionType } from "../primitive/transaction";
+import { TransactionStatus } from "../primitive/transaction";
 
 export type CreateDepositIn = {
   amount: number;
