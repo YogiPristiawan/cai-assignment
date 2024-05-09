@@ -13,3 +13,5 @@ export type CreateAccountIn = {
 };
 
 export type CreateAccountOut = Account[];
+
+export type GetAccountByIdOut = Account;

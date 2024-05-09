@@ -1,5 +1,5 @@
 export enum AccountType {
-  Debit = 1,
-  Credit,
-  Loan,
+  Debit = "debit",
+  Credit = "credit",
+  Loan = "loan",
 }

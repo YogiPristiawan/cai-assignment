@@ -2,7 +2,9 @@ import {
   CreateAccountIn,
   CreateAccountOut,
   FindAccountsByUserIdOut,
+  GetAccountByIdOut,
 } from "@src/model/account";
+import { AccountType } from "@src/primitive/account";
 
 class AccountRepo {
   private static _instance: AccountRepo;
@@ -21,17 +23,17 @@ class AccountRepo {
       {
         id: "123",
         name: "Debit",
-        type: 1,
+        type: AccountType.Debit,
       },
       {
         id: "234",
         name: "Credit",
-        type: 2,
+        type: AccountType.Credit,
       },
       {
         id: "345",
         name: "Loan",
-        type: 3,
+        type: AccountType.Loan,
       },
     ];
   }
@@ -42,19 +44,28 @@ class AccountRepo {
       {
         id: "123",
         name: "Debit",
-        type: 1,
+        type: AccountType.Debit,
       },
       {
         id: "234",
         name: "Credit",
-        type: 2,
+        type: AccountType.Credit,
       },
       {
         id: "345",
         name: "Loan",
-        type: 3,
+        type: AccountType.Loan,
       },
     ];
+  }
+
+  public getAccountById(userId: string, accountId: string): GetAccountByIdOut {
+    // TODO: implement db
+    return {
+      id: "123",
+      name: "Mock",
+      type: AccountType.Debit,
+    };
   }
 }
 

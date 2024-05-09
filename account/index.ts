@@ -2,16 +2,17 @@ import dotenv from "dotenv";
 import fastify from "fastify";
 import cors from "@fastify/cors";
 import formDataParser from "@fastify/formbody";
-import { findAccounts } from "@src/presentation/account";
-import AccountRepo from "@src/repo/account";
-import CreateAccount from "@src/service/CreateAccount";
+
+import { findAccounts, getAccountById } from "src/presentation/account";
+
+import AccountRepo from "src/repo/account";
+import CreateAccount from "src/service/CreateAccount";
 
 import SupertokensEmailPassword from "supertokens-node/recipe/emailpassword";
 import Session from "supertokens-node/recipe/session";
 import { plugin as supertokenPlugin } from "supertokens-node/framework/fastify";
 import supertokens from "supertokens-node";
 import { verifySession } from "supertokens-node/recipe/session/framework/fastify";
-import { SessionRequest } from "supertokens-node/lib/build/framework/fastify";
 
 dotenv.config();
 
@@ -73,8 +74,13 @@ server.get("/ping", async (req, reply) => {
     .send({ message: "pong" });
 });
 
-// TODO: split into another file
 server.get("/accounts", { preHandler: verifySession() }, findAccounts);
+
+server.get<{ Params: { accountId: string } }>(
+  "/accounts/:accountId",
+  { preHandler: verifySession() },
+  getAccountById,
+);
 
 server.listen(
   { port: process.env.APP_PORT ? Number(process.env.APP_PORT) : 3000 },
