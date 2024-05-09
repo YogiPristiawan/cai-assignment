@@ -1,11 +1,14 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { SessionRequest } from "supertokens-node/lib/build/framework/fastify";
 import CreateDeposit from "../service/CreateDeposit";
+
 import TransactionRepo from "../repo/transaction";
+import AccountRepo from "../repo/account";
+
 import { CreateDepositIn } from "../dto/transaction";
 import { HttpError } from "../primitive/error";
 
-export function createDeposit(
+export async function createDeposit(
   req: SessionRequest<FastifyRequest<{ Body: CreateDepositIn }>>,
   res: FastifyReply,
 ) {
@@ -24,9 +27,10 @@ export function createDeposit(
     }
     const userId = req.session.getUserId();
 
-    const service = new CreateDeposit(TransactionRepo);
-    const result = service.exec(userId, {
+    const service = new CreateDeposit(TransactionRepo, AccountRepo);
+    const result = await service.exec(userId, {
       amount: req.body.amount,
+      accountId: req.body.accountId,
     });
 
     return res

@@ -1,4 +1,8 @@
-import { CreateDepositIn, CreateDepositOut } from "@src/model/transaction";
+import {
+  CreateDepositIn,
+  CreateDepositOut,
+  UpdateTransactionStatusIn,
+} from "@src/model/transaction";
 import { TransactionStatus } from "@src/primitive/transaction";
 
 class TransactionRepo {
@@ -20,6 +24,8 @@ class TransactionRepo {
       status: TransactionStatus.Pending,
     };
   }
+
+  public updateTransactionStatus(param: UpdateTransactionStatusIn): void {}
 }
 
 export default TransactionRepo.getInstance();
