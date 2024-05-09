@@ -3,6 +3,8 @@ import fastify from "fastify";
 import cors from "@fastify/cors";
 import formDataParser from "@fastify/formbody";
 import { findAccounts } from "@src/presentation/account";
+import AccountRepo from "@src/repo/account";
+import CreateAccount from "@src/service/CreateAccount";
 
 import SupertokensEmailPassword from "supertokens-node/recipe/emailpassword";
 import Session from "supertokens-node/recipe/session";
@@ -40,7 +42,10 @@ supertokens.init({
                 response.user.loginMethods.length === 1 &&
                 input.session === undefined
               ) {
-                // TODO: implememnt something
+                // call service layers
+
+                const service = new CreateAccount(AccountRepo);
+                service.exec(response.user);
               }
 
               return response;

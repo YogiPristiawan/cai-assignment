@@ -7,3 +7,9 @@ type Account = {
 };
 
 export type FindAccountsByUserIdOut = Account[];
+
+export type CreateAccountIn = {
+  userId: string;
+};
+
+export type CreateAccountOut = Account[];
