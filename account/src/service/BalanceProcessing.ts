@@ -1,4 +1,4 @@
-import { BalanceProcessingIn } from "../dto/account";
+import { BalanceProcessingIn, BalanceProcessingOut } from "../dto/account";
 import { BadRequestError } from "../primitive/error";
 import { CalculateBalanceIn } from "../model/account";
 
@@ -13,7 +13,9 @@ export default class BalanceProcessing {
     this._accountRepo = accountRepo;
   }
 
-  public async exec(payload: BalanceProcessingIn) {
+  public async exec(
+    payload: BalanceProcessingIn,
+  ): Promise<BalanceProcessingOut> {
     this.validatePayload(payload);
     await this._accountRepo.calculateBalance({
       transactionId: payload.transactionId,
@@ -23,7 +25,7 @@ export default class BalanceProcessing {
       transactionType: payload.transactionType,
     });
 
-    // TODO: send to tranaction service
+    return payload;
   }
 
   private validatePayload(payload: BalanceProcessingIn) {

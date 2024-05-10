@@ -29,3 +29,11 @@ export type BalanceProcessingIn = {
   amount: number;
   transactionType: TransactionType;
 };
+
+export type BalanceProcessingOut = {
+  userId: string;
+  transactionId: string;
+  accountId: string;
+  amount: number;
+  transactionType: TransactionType;
+};

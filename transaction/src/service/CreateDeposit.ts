@@ -68,7 +68,6 @@ export default class CreateDeposit {
     return {
       transactionId: transaction.transactionId,
       amount: transaction.amount,
-      status: transaction.status,
     };
   }
 

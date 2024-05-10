@@ -8,7 +8,6 @@ export type CreateDepositIn = {
 export type CreateDepositOut = {
   transactionId: string;
   amount: number;
-  status: TransactionStatus;
 };
 
 export type SendPaymentIn = {

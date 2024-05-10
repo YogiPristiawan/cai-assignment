@@ -90,7 +90,7 @@ export async function balanceProcessing(
     }
 
     const service = new BalanceProcessing(AccountRepo);
-    await service.exec({
+    const result = await service.exec({
       transactionId: req.body.transactionId ?? "",
       userId: req.body.userId ?? "",
       accountId: req.body.accountId ?? "",
@@ -101,7 +101,7 @@ export async function balanceProcessing(
     return res
       .code(201)
       .header("Content-Type", "application/json")
-      .send({ message: "success" });
+      .send({ message: "success", data: result });
   } catch (err) {
     const e = err as Error;
     if (e instanceof HttpError) {
