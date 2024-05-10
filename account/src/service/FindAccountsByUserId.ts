@@ -2,7 +2,7 @@ import { FindAccountsByUserIdOut } from "@src/dto/account";
 import { FindAccountsByUserIdOut as RepoFindAccountByUserIdOut } from "@src/model/account";
 
 interface IAccountRepo {
-  findAccountsByUserId(userId: string): RepoFindAccountByUserIdOut;
+  findAccountsByUserId(userId: string): Promise<RepoFindAccountByUserIdOut>;
 }
 
 export default class FindAccountByUserId {
@@ -12,8 +12,8 @@ export default class FindAccountByUserId {
     this._accountRepo = accountRepo;
   }
 
-  public exec(userId: string): FindAccountsByUserIdOut {
-    const accounts = this._accountRepo.findAccountsByUserId(userId);
+  public async exec(userId: string): Promise<FindAccountsByUserIdOut> {
+    const accounts = await this._accountRepo.findAccountsByUserId(userId);
 
     return accounts;
   }

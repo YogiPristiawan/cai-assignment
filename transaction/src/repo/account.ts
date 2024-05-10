@@ -22,14 +22,12 @@ class AccountRepo {
   public async createDeposit(
     param: CreateDepositIn,
   ): Promise<CreateDepositOut> {
-    console.log("processing");
     await new Promise((resolve) => {
       setTimeout(() => {
         resolve(true);
       }, 10000);
     });
 
-    console.log("send to account service");
     const url = `${env.ACCOUNT_SERVICE_URI}/balance-processing`;
     const payload = {
       userId: param.userId,

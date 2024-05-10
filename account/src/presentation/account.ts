@@ -10,7 +10,7 @@ import AccountRepo from "@src/repo/account";
 import TransactionRepo from "@src/repo/transactions";
 import { BalanceProcessingIn } from "@src/dto/account";
 
-export function findAccounts(req: SessionRequest, res: FastifyReply) {
+export async function findAccounts(req: SessionRequest, res: FastifyReply) {
   try {
     if (!req.session) {
       return res
@@ -23,7 +23,7 @@ export function findAccounts(req: SessionRequest, res: FastifyReply) {
 
     const service = new FindAccountsByUserId(AccountRepo);
 
-    const result = service.exec(userId);
+    const result = await service.exec(userId);
 
     return res.code(200).header("Content-Type", "application/json").send({
       message: "success",

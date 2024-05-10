@@ -6,7 +6,7 @@ import {
 } from "@src/model/account";
 
 import db from "@src/pkg/prisma";
-import { Prisma } from "@prisma/client";
+import { AccountType, Prisma } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { BadRequestError, NotFoundError } from "@src/primitive/error";
 import { TransactionType } from "@src/primitive/transaction";
@@ -30,28 +30,35 @@ class AccountRepo {
     return AccountRepo._instance;
   }
 
-  public findAccountsByUserId(userId: string): FindAccountsByUserIdOut {
-    // TODO: implement db
-    return [
-      {
-        id: "123",
-        name: "Debit",
-        type: "debit",
-        last_balance: 0,
-      },
-      {
-        id: "234",
-        name: "Credit",
-        type: "credit",
-        last_balance: 0,
-      },
-      {
-        id: "345",
-        name: "Loan",
-        type: "loan",
-        last_balance: 0,
-      },
-    ];
+  public async findAccountsByUserId(
+    userId: string,
+  ): Promise<FindAccountsByUserIdOut> {
+    try {
+      const accounts = await db.account.findMany({
+        where: {
+          userId: userId,
+        },
+      });
+
+      return accounts.map((account) => {
+        return {
+          id: account.id,
+          type: account.type,
+          name: account.name,
+          lastBalance: account.lastBalance.toNumber(),
+          createdAt: account.createdAt.toISOString(),
+        };
+      });
+    } catch (err) {
+      const e = err as Error;
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === "P2015") {
+          throw new NotFoundError("record not found");
+        }
+      }
+
+      throw err;
+    }
   }
 
   public async createAccount(param: CreateAccountIn): Promise<void> {
@@ -150,7 +157,8 @@ class AccountRepo {
       id: "123",
       name: "Mock",
       type: "debit",
-      last_balance: 0,
+      lastBalance: 0,
+      createdAt: new Date().toISOString(),
     };
   }
 }

@@ -5,7 +5,8 @@ type Account = {
   id: string;
   type: AccountType;
   name: string;
-  last_balance: number;
+  lastBalance: number;
+  createdAt: string;
 };
 
 export type FindAccountsByUserIdOut = Account[];
