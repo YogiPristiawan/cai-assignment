@@ -1,4 +1,5 @@
 import { AccountType } from "@src/primitive/account";
+import { TransactionType } from "@src/primitive/transaction";
 
 type Account = {
   id: string;
@@ -16,3 +17,11 @@ export type CreateAccountIn = {
 // export type CreateAccountOut = Account[];
 
 export type GetAccountByIdOut = Account;
+
+export type CalculateBalanceIn = {
+  userId: string;
+  transactionId: string;
+  accountId: string;
+  amount: number;
+  transactionType: TransactionType;
+};

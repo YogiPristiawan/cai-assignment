@@ -22,7 +22,8 @@ model Account {
   name   String      @db.VarChar(63)
   type   AccountType
 
-  last_balance Decimal
+  lastBalance       Decimal
+  lastBalanceUpdate DateTime @default(now()) @db.Timestamptz
 
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
@@ -42,6 +43,7 @@ enum AccountStatementTransactionType {
 }
 
 model AccountStatement {
+  incr          BigInt @default(autoincrement()) // this for optimize order
   id            String @id @default(uuid()) @db.Uuid
   transactionId String @db.Uuid
   userId        String @db.Uuid
@@ -55,6 +57,7 @@ model AccountStatement {
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
 
+  @@index([incr])
   @@index([userId])
   @@index([accountId])
   @@index([transactionType])

@@ -3,7 +3,11 @@ import fastify from "fastify";
 import cors from "@fastify/cors";
 import formDataParser from "@fastify/formbody";
 
-import { findAccounts, getAccountById } from "src/presentation/account";
+import {
+  balanceProcessing,
+  findAccounts,
+  getAccountById,
+} from "src/presentation/account";
 
 import AccountRepo from "src/repo/account";
 import CreateAccount from "src/service/CreateAccount";
@@ -13,6 +17,7 @@ import Session from "supertokens-node/recipe/session";
 import { plugin as supertokenPlugin } from "supertokens-node/framework/fastify";
 import supertokens from "supertokens-node";
 import { verifySession } from "supertokens-node/recipe/session/framework/fastify";
+import { BalanceProcessingIn } from "@src/dto/account";
 
 dotenv.config();
 
@@ -78,6 +83,12 @@ server.get<{ Params: { accountId: string } }>(
   "/accounts/:accountId",
   { preHandler: verifySession() },
   getAccountById,
+);
+
+server.post<{ Body: BalanceProcessingIn }>(
+  "/balance-processing",
+  // TODO: middleware
+  balanceProcessing,
 );
 
 server.listen(

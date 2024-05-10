@@ -21,3 +21,11 @@ export type FindAccountsByUserIdOut = Account[];
 export type GetAccountByIdOut = Account & {
   transactions: AccountTransaction[];
 };
+
+export type BalanceProcessingIn = {
+  userId: string;
+  transactionId: string;
+  accountId: string;
+  amount: number;
+  transactionType: TransactionType;
+};
