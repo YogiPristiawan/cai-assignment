@@ -1,12 +1,9 @@
 import { User } from "supertokens-node/lib/build/types";
-import {
-  CreateAccountIn as ModelCreateAccountIn,
-  CreateAccountOut as ModelCreateAccountOut,
-} from "@src/model/account";
+import { CreateAccountIn as ModelCreateAccountIn } from "@src/model/account";
 
 // interface can be used for mocking purpose
 interface IAccountRepo {
-  createAccount(param: ModelCreateAccountIn): ModelCreateAccountOut;
+  createAccount(param: ModelCreateAccountIn): Promise<void>;
 }
 
 type CreateAccountIn = User;
@@ -18,8 +15,8 @@ export default class CreateAccount {
     this._accountRepo = accountRepo;
   }
 
-  public exec(param: CreateAccountIn) {
-    const createdAccounts = this._accountRepo.createAccount({
+  public async exec(param: CreateAccountIn) {
+    await this._accountRepo.createAccount({
       userId: param.id,
     });
   }

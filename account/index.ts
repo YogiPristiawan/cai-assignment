@@ -43,10 +43,8 @@ supertokens.init({
                 response.user.loginMethods.length === 1 &&
                 input.session === undefined
               ) {
-                // call service layers
-
                 const service = new CreateAccount(AccountRepo);
-                service.exec(response.user);
+                await service.exec(response.user);
               }
 
               return response;

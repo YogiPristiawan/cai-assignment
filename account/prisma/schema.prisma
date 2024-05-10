@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URL")
+}
+
+enum AccountType {
+  debit
+  credit
+  loan
+}
+
+model Account {
+  id     String      @id @default(uuid()) @db.Uuid
+  userId String      @db.Uuid
+  name   String      @db.VarChar(63)
+  type   AccountType
+
+  last_balance Decimal
+
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  accountStatements AccountStatement[]
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+  @@map("accounts")
+}
+
+enum AccountStatementTransactionType {
+  deposit
+  payment
+  withdraw
+}
+
+model AccountStatement {
+  id            String @id @default(uuid()) @db.Uuid
+  transactionId String @db.Uuid
+  userId        String @db.Uuid
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String  @db.Uuid
+
+  transactionType AccountStatementTransactionType
+  amount          Decimal
+
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  @@index([userId])
+  @@index([accountId])
+  @@index([transactionType])
+  @@index([createdAt])
+  @@map("account_statements")
+}
