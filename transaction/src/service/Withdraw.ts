@@ -15,8 +15,8 @@ import { WithdrawIn, WithdrawOut } from "../dto/transaction";
 import { TransactionStatus } from "../primitive/transaction";
 
 interface ITransactionRepo {
-  withdraw(param: TrxModelWithdrawIn): TrxModelWithdrawOut;
-  updateTransactionStatus(param: UpdateTransactionStatusIn): void;
+  withdraw(param: TrxModelWithdrawIn): Promise<TrxModelWithdrawOut>;
+  updateTransactionStatus(param: UpdateTransactionStatusIn): Promise<void>;
 }
 
 interface IAccountRepo {
@@ -35,7 +35,7 @@ export default class Withdraw {
   public async exec(userId: string, payload: WithdrawIn): Promise<WithdrawOut> {
     this.validatePayload(payload);
 
-    const transaction = this._transactionRepo.withdraw({
+    const transaction = await this._transactionRepo.withdraw({
       userId: userId,
       accountId: payload.accountId,
       amount: payload.amount,
@@ -50,12 +50,12 @@ export default class Withdraw {
         amount: payload.amount,
       });
 
-      this._transactionRepo.updateTransactionStatus({
+      await this._transactionRepo.updateTransactionStatus({
         transactionId: transaction.transactionId,
         status: "success",
       });
     } catch (err) {
-      this._transactionRepo.updateTransactionStatus({
+      await this._transactionRepo.updateTransactionStatus({
         transactionId: transaction.transactionId,
         status: "failed",
       });

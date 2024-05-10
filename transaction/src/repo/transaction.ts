@@ -1,6 +1,7 @@
 import {
   CreateDepositIn,
   CreateDepositOut,
+  FindTransactionByAccountIdOut,
   SendPaymentIn,
   SendPaymentOut,
   UpdateTransactionStatusIn,
@@ -10,6 +11,8 @@ import {
 import { TransactionStatus } from "@src/primitive/transaction";
 
 import db from "@src/pkg/prisma";
+import { HttpError, NotFoundError } from "@src/primitive/error";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 class TransactionRepo {
   private static _instance: TransactionRepo;
@@ -42,22 +45,39 @@ class TransactionRepo {
     };
   }
 
-  public sendPayment(param: SendPaymentIn): SendPaymentOut {
-    // TODO: implement db. make transaction default to pending
+  public async sendPayment(param: SendPaymentIn): Promise<SendPaymentOut> {
+    const createdPayment = await db.transaction.create({
+      data: {
+        userId: param.userId,
+        accountId: param.accountId,
+        status: "pending",
+        type: "payment",
+        amount: param.amount,
+      },
+    });
 
     return {
-      transactionId: "321",
-      amount: 20000,
-      status: "pending",
+      transactionId: createdPayment.id,
+      amount: createdPayment.amount.toNumber(),
+      status: createdPayment.status,
     };
   }
 
-  public withdraw(param: WithdrawIn): WithdrawOut {
-    // TODO: Implement db. make the teransaction default to pending
+  public async withdraw(param: WithdrawIn): Promise<WithdrawOut> {
+    const createdWithdraw = await db.transaction.create({
+      data: {
+        userId: param.userId,
+        accountId: param.accountId,
+        status: "pending",
+        type: "withdraw",
+        amount: param.amount,
+      },
+    });
+
     return {
-      transactionId: "345",
-      amount: 10000,
-      status: "pending",
+      transactionId: createdWithdraw.id,
+      amount: createdWithdraw.amount.toNumber(),
+      status: createdWithdraw.status,
     };
   }
 
@@ -72,6 +92,43 @@ class TransactionRepo {
         status: param.status,
       },
     });
+  }
+
+  public async findTransactionByAccountId(
+    userId: string,
+    accountId: string,
+  ): Promise<FindTransactionByAccountIdOut> {
+    try {
+      // TODO: pagination
+      const transactions = await db.transaction.findMany({
+        where: {
+          userId: userId,
+          accountId: accountId,
+        },
+        orderBy: {
+          incr: "desc",
+        },
+      });
+
+      return transactions.map((transaction) => {
+        return {
+          id: transaction.id,
+          amount: transaction.amount.toNumber(),
+          type: transaction.type,
+          status: transaction.status,
+          createdAt: transaction.createdAt.toISOString(),
+        };
+      });
+    } catch (err) {
+      const e = err as Error;
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === "P2015") {
+          return [];
+        }
+      }
+
+      throw err;
+    }
   }
 }
 

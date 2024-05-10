@@ -37,7 +37,7 @@ export async function findAccounts(req: SessionRequest, res: FastifyReply) {
   }
 }
 
-export function getAccountById(
+export async function getAccountById(
   req: SessionRequest<FastifyRequest<{ Params: { accountId: string } }>>,
   res: FastifyReply,
 ) {
@@ -53,7 +53,7 @@ export function getAccountById(
     const accountId = req.params.accountId;
 
     const service = new GetAccountById(AccountRepo, TransactionRepo);
-    const result = service.exec(userId, accountId);
+    const result = await service.exec(userId, accountId);
 
     return res
       .code(200)

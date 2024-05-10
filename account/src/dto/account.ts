@@ -5,6 +5,8 @@ type Account = {
   id: string;
   type: AccountType;
   name: string;
+  lastBalance: number;
+  createdAt: string;
 };
 
 type AccountTransaction = {

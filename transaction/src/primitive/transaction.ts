@@ -5,4 +5,4 @@ import {
 
 export type TransactionStatus = PrismaTransactionStatus;
 
-export type TransactonType = PrismaTransactionType;
+export type TransactionType = PrismaTransactionType;

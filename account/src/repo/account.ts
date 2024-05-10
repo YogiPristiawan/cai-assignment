@@ -151,15 +151,37 @@ class AccountRepo {
     }
   }
 
-  public getAccountById(userId: string, accountId: string): GetAccountByIdOut {
-    // TODO: implement db
-    return {
-      id: "123",
-      name: "Mock",
-      type: "debit",
-      lastBalance: 0,
-      createdAt: new Date().toISOString(),
-    };
+  public async getAccountById(
+    userId: string,
+    accountId: string,
+  ): Promise<GetAccountByIdOut> {
+    try {
+      const account = await db.account.findUnique({
+        where: {
+          userId: userId,
+          id: accountId,
+        },
+      });
+
+      if (!account) throw new NotFoundError("acount not found");
+
+      return {
+        id: account.id,
+        type: account.type,
+        name: account.name,
+        lastBalance: account.lastBalance.toNumber(),
+        createdAt: account.createdAt.toISOString(),
+      };
+    } catch (err) {
+      const e = err as Error;
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === "P2015") {
+          throw new NotFoundError("record not found");
+        }
+      }
+
+      throw err;
+    }
   }
 }
 

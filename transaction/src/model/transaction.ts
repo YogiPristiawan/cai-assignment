@@ -1,4 +1,4 @@
-import { TransactionStatus } from "../primitive/transaction";
+import { TransactionStatus, TransactionType } from "../primitive/transaction";
 
 export type CreateDepositIn = {
   userId: string;
@@ -40,3 +40,11 @@ export type WithdrawOut = {
   amount: number;
   status: TransactionStatus;
 };
+
+export type FindTransactionByAccountIdOut = {
+  id: string;
+  amount: number;
+  type: TransactionType;
+  status: TransactionStatus;
+  createdAt: string;
+}[];

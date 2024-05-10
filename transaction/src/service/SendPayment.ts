@@ -12,8 +12,8 @@ import { TransactionStatus } from "../primitive/transaction";
 import { BadRequestError } from "@src/primitive/error";
 
 interface ITransactionRepo {
-  sendPayment(param: TrxModelSendPaymentIn): TrxModelSendPaymentOut;
-  updateTransactionStatus(param: UpdateTransactionStatusIn): void;
+  sendPayment(param: TrxModelSendPaymentIn): Promise<TrxModelSendPaymentOut>;
+  updateTransactionStatus(param: UpdateTransactionStatusIn): Promise<void>;
 }
 
 interface IAccountRepo {
@@ -38,7 +38,7 @@ export default class SendPayment {
     this.validatePayload(payload);
 
     // make transaction
-    const transaction = this._transactionRepo.sendPayment({
+    const transaction = await this._transactionRepo.sendPayment({
       userId: userId,
       amount: payload.amount,
       accountId: payload.accountId,
@@ -54,12 +54,12 @@ export default class SendPayment {
         amount: payload.amount,
       });
 
-      this._transactionRepo.updateTransactionStatus({
+      await this._transactionRepo.updateTransactionStatus({
         transactionId: transaction.transactionId,
         status: "success",
       });
     } catch (err) {
-      this._transactionRepo.updateTransactionStatus({
+      await this._transactionRepo.updateTransactionStatus({
         transactionId: transaction.transactionId,
         status: "failed",
       });

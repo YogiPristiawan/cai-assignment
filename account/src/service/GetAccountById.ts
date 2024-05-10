@@ -7,14 +7,14 @@ interface IAccountRepo {
   getAccountById(
     userId: string,
     accountId: string,
-  ): AccountModelGetAccountByIdOut;
+  ): Promise<AccountModelGetAccountByIdOut>;
 }
 
 interface ITransactionRepo {
   findTransactionsByAccountId(
     userId: string,
     accountId: string,
-  ): TrxModelFindTransactionByAccountIdOut;
+  ): Promise<TrxModelFindTransactionByAccountIdOut>;
 }
 
 export default class GetAccountById {
@@ -26,23 +26,37 @@ export default class GetAccountById {
     this._transactionRepo = transactionRepo;
   }
 
-  public exec(userId: string, accountId: string): GetAccountByIdOut {
+  public async exec(
+    userId: string,
+    accountId: string,
+  ): Promise<GetAccountByIdOut> {
     if (!accountId) {
       throw new BadRequestError("accountId param is required");
     }
 
-    const account = this._accountRepo.getAccountById(userId, accountId);
+    const account = await this._accountRepo.getAccountById(userId, accountId);
 
-    const transactions = this._transactionRepo.findTransactionsByAccountId(
-      userId,
-      accountId,
-    );
+    const transactions =
+      await this._transactionRepo.findTransactionsByAccountId(
+        userId,
+        accountId,
+      );
 
     return {
       id: account.id,
       name: account.name,
       type: account.type,
-      transactions: transactions,
+      lastBalance: account.lastBalance,
+      createdAt: account.createdAt,
+      transactions: transactions.map((transaction) => {
+        return {
+          id: transaction.id,
+          type: transaction.type,
+          status: transaction.status,
+          amount: transaction.amount,
+          createdAt: transaction.createdAt,
+        };
+      }),
     };
   }
 }

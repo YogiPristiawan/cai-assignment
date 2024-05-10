@@ -1,6 +1,19 @@
 import { FindTransactionByAccountIdOut } from "../model/transaction";
 import { TransactionStatus, TransactionType } from "../primitive/transaction";
 
+import env from "@src/config/env";
+
+type FindTransactionsByAccountIdApiResponse = {
+  message: string;
+  data: {
+    id: string;
+    amount: number;
+    type: TransactionType;
+    status: TransactionStatus;
+    createdAt: string;
+  }[];
+};
+
 class TransactionRepo {
   private static _instance: TransactionRepo;
 
@@ -12,38 +25,42 @@ class TransactionRepo {
     return TransactionRepo._instance;
   }
 
-  public findTransactionsByAccountId(
+  public async findTransactionsByAccountId(
     userId: string,
     accountId: string,
-  ): FindTransactionByAccountIdOut {
+  ): Promise<FindTransactionByAccountIdOut> {
     // TODO: call transaction service
+    const url = new URL(`${env.TRANSACTION_SERVICE_URI}/transactions`);
+    const searchParam = new URLSearchParams();
+    searchParam.append("userId", userId);
+    searchParam.append("accountId", accountId);
 
-    return [
-      {
-        id: "123",
-        type: TransactionType.Deposit,
-        status: TransactionStatus.Success,
-        amount: 50000,
+    url.search = searchParam.toString();
 
-        createdAt: "2024-05-05 19:00:00",
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        // TODO: put api key here
+        "Content-Type": "application/json",
       },
-      {
-        id: "124",
-        type: TransactionType.Payment,
-        status: TransactionStatus.Success,
-        amount: 20000,
+    });
 
-        createdAt: "2024-05-05 20:00:00",
-      },
-      {
-        id: "125",
-        type: TransactionType.Withdraw,
-        status: TransactionStatus.Success,
-        amount: 10000,
+    const json =
+      (await response.json()) as FindTransactionsByAccountIdApiResponse;
 
-        createdAt: "2024-05-05 21:00:00",
-      },
-    ];
+    if (!response.ok) {
+      throw new Error(json.message);
+    }
+
+    return json.data.map((data) => {
+      return {
+        id: data.id,
+        type: data.type,
+        status: data.status,
+        amount: data.amount,
+        createdAt: data.createdAt,
+      };
+    });
   }
 }
 

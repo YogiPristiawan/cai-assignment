@@ -9,6 +9,7 @@ import {
 } from "@src/dto/transaction";
 import {
   createDeposit,
+  findTransactionByAccountId,
   sendPayment,
   withdraw,
 } from "@src/presentation/transaction";
@@ -68,6 +69,11 @@ server.post<{ Body: WithdrawIn }>(
   { preHandler: verifySession() },
   withdraw,
 );
+
+server.get<{
+  Querystring: { userId: string; accountId: string };
+  // TODO: middleware
+}>("/transactions", findTransactionByAccountId);
 
 server.listen(
   { port: process.env.APP_PORT ? Number(process.env.APP_PORT) : 3000 },

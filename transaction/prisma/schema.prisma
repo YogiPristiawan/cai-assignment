@@ -23,6 +23,7 @@ enum TransactionType {
 }
 
 model Transaction {
+  incr      BigInt            @default(autoincrement())
   id        String            @id @default(uuid()) @db.Uuid
   userId    String            @db.Uuid
   accountId String            @db.Uuid
@@ -33,6 +34,7 @@ model Transaction {
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz
 
+  @@index([incr])
   @@index([userId, accountId])
   @@index([accountId])
   @@index([createdAt])
