@@ -1,0 +1,41 @@
+post:
+  tags:
+    - Transaction
+  summary: Create withdraw
+  operationId: createWithdraw
+  security:
+    - BearetAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            amount:
+              type: number
+              format: float
+            accountId:
+              type: string
+              format: uuid
+          example:
+            amount: 25000
+            accountId: ec83f2a2-9b5c-4c3f-9b14-47572edb1550
+  responses:
+    "201":
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                    format: uuid
+                  amount:
+                    type: number
+                    format: float

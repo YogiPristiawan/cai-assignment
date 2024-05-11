@@ -1,0 +1,53 @@
+openapi: 3.0.3
+info:
+  title: CAI Assignment
+  description: |-
+    CAI Assignment API documentation
+  contact:
+    email: apiteam@swagger.io
+  version: 1.0.0
+servers:
+  - url: http://localhost:3567
+    description: Auth Service
+  - url: http://localhost:3000
+    description: Account Service
+  - url: http://localhost:3001
+    description: Transaction Service
+tags:
+  - name: Account
+    description: Account service for managing auth, account, balance, etc. This. should point to the correct URL
+  - name: Transaction
+    description: Transaction service. This should point to the correct URL
+
+paths:
+  # account
+  /auth/signup:
+    $ref: ./account/signUp.yml
+  /auth/signin:
+    $ref: ./account/signIn.yml
+
+  /acounts:
+    $ref: ./account/findAllAccounts.yml
+  /accounts/:accountId:
+    $ref: ./account/getAccountById.yml
+
+  /balance-processing:
+    $ref: ./account/balanceProcessing.yml
+
+  # Transaction
+  /deposit:
+    $ref: ./transaction/createDeposit.yml
+  /send:
+    $ref: ./transaction/createSendPayment.yml
+  /withdraw:
+    $ref: ./transaction/createWithdraw.yml
+
+  /transactions:
+    $ref: ./transaction/findTransactions.yml
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

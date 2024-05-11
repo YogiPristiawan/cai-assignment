@@ -1,0 +1,93 @@
+post:
+  tags:
+    - Account
+  summary: Perform login
+  operationId: signIn
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            formFields:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Field name of the given value
+                  value:
+                    type: string
+                    description: Value of the given id
+              example:
+                - id: email
+                  value: example@email.com
+                - id: password
+                  value: Password321
+  responses:
+    "200":
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              user:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  isPrimaryUser:
+                    type: boolean
+                  tenantIds:
+                    type: array
+                    items:
+                      type: string
+                  emails:
+                    type: array
+                    items:
+                      type: string
+                  phoneNumbers:
+                    type: array
+                    items:
+                      type: string
+                  thirdParty:
+                    type: array
+                    items:
+                      type: string
+                  loginMethods:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        recipeId:
+                          type: string
+                          format: uuid
+                        recipeUserId:
+                          type: string
+                          format: uuid
+                        tenantIds:
+                          type: array
+                          items:
+                            type: string
+                        email:
+                          type: string
+                          format: email
+                        timeJoined:
+                          type: number
+                        verified:
+                          type: boolean
+                  timeJoined:
+                    type: number
+      headers:
+        st-access-token:
+          type: string
+          description: Access token
+        st-refresh-token:
+          type: string
+          description: Refresh token
