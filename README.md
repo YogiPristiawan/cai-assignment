@@ -23,3 +23,4 @@ If you don't cusotomize the `.env` file, the application will default to running
 - Auth Service: `http://localhost:3567`
 - Account Service: `http://localhost:3000`
 - Transaction Service: `http://localhost:3001`
+- Swagger API Documentation: `http://localhost`
