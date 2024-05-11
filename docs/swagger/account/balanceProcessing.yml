@@ -1,0 +1,50 @@
+post:
+  tags:
+    - Account
+  summary: Calculate user balance
+  description: This is an internal API used for communication between servers, enabling interaction between each service.
+  operationId: balanceProcessing
+  requetBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            accountId:
+              type: string
+              format: uuid
+            userId:
+              type: string
+              format: uuid
+            transactionType:
+              type: string
+              enum: ["deposit", "payment", "withdraw"]
+            amount:
+              type: number
+              format: float
+            transactionId:
+              type: string
+              format: uuid
+  responses:
+    "200":
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              accountId:
+                type: string
+                format: uuid
+              userId:
+                type: string
+                format: uuid
+              transactionType:
+                type: string
+                enum: ["deposit", "payment", "withdraw"]
+              amount:
+                type: number
+                format: float
+              transactionId:
+                type: string
+                format: uuid

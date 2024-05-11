@@ -1,0 +1,54 @@
+get:
+  tags:
+    - Account
+  summary: Get the detail of account and its transaction histories
+  operationId: getAccountById
+  security:
+    - BearerAuth: []
+  responses:
+    "200":
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Response message
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum: ["debit", "credit", "loan"]
+                  lastBalance:
+                    type: number
+                    format: float
+                  createdAt:
+                    type: string
+                    format: datetime
+                  transactions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        type:
+                          type: string
+                          enum: ["deposit", "payment", "withdraw"]
+                        status:
+                          type: string
+                          enum: ["pending", "success", "failed"]
+                        amount:
+                          type: number
+                          format: float
+                        createdAt:
+                          type: string
+                          format: datetime

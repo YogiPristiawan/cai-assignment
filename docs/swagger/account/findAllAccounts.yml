@@ -1,0 +1,43 @@
+get:
+  tags:
+    - Account
+  summary: Find all user payment accounts
+  operationId: findAllAccounts
+  security:
+    - BearerAuth: []
+  responses:
+    "200":
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Response message
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    type:
+                      type: string
+                      enum: ["debit", "credit", "loan"]
+                    name:
+                      type: string
+                    lastBalance:
+                      type: number
+                      format: float
+                    createdAt:
+                      type: string
+                      format: datetime
+                example:
+                  - id: ec83f2a2-9b5c-4c3f-9b14-47572edb1550
+                    name: Debit Account
+                    type: debit
+                    lastBalance: 0
+                    createdAt: "2024-05-11T08:28:49.126Z"
