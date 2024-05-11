@@ -6,7 +6,7 @@
   "author": "yogipristiawan@gmail.com",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --watch './**/*.ts' --exec 'ts-node -r tsconfig-paths/register' index.ts",
+    "dev": "NODE_ENV=development nodemon --watch './**/*.ts' --exec 'ts-node -r tsconfig-paths/register' index.ts",
     "build": "tspc -p tsconfig.json",
     "start": "node ./dist/index.js"
   },

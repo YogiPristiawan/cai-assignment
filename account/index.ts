@@ -1,16 +1,21 @@
-import dotenv from "dotenv";
 import fastify from "fastify";
 import cors from "@fastify/cors";
 import formDataParser from "@fastify/formbody";
+
+if (process.env.NODE_ENV === "development") {
+  import("dotenv").then((dotenv) => {
+    dotenv.config();
+  });
+}
 
 import {
   balanceProcessing,
   findAccounts,
   getAccountById,
-} from "src/presentation/account";
+} from "@src/presentation/account";
 
-import AccountRepo from "src/repo/account";
-import CreateAccount from "src/service/CreateAccount";
+import AccountRepo from "@src/repo/account";
+import CreateAccount from "@src/service/CreateAccount";
 
 import SupertokensEmailPassword from "supertokens-node/recipe/emailpassword";
 import Session from "supertokens-node/recipe/session";
@@ -18,8 +23,6 @@ import { plugin as supertokenPlugin } from "supertokens-node/framework/fastify";
 import supertokens from "supertokens-node";
 import { verifySession } from "supertokens-node/recipe/session/framework/fastify";
 import { BalanceProcessingIn } from "@src/dto/account";
-
-dotenv.config();
 
 const server = fastify();
 
@@ -92,7 +95,10 @@ server.post<{ Body: BalanceProcessingIn }>(
 );
 
 server.listen(
-  { port: process.env.APP_PORT ? Number(process.env.APP_PORT) : 3000 },
+  {
+    port: process.env.APP_PORT ? Number(process.env.APP_PORT) : 3000,
+    host: "0.0.0.0",
+  },
   (err, address) => {
     if (err) {
       console.error(err);

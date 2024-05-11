@@ -1,7 +1,13 @@
-import dotenv from "dotenv";
 import fastify from "fastify";
 import cors from "@fastify/cors";
 import formDataParser from "@fastify/formbody";
+
+if (process.env.NODE_ENV === "development") {
+  import("dotenv").then((dotenv) => {
+    dotenv.config();
+  });
+}
+
 import {
   CreateDepositIn,
   SendPaymentIn,
@@ -18,8 +24,6 @@ import Session from "supertokens-node/recipe/session";
 import { plugin as supertokenPlugin } from "supertokens-node/framework/fastify";
 import supertokens from "supertokens-node";
 import { verifySession } from "supertokens-node/recipe/session/framework/fastify";
-
-dotenv.config();
 
 const server = fastify();
 
@@ -76,7 +80,10 @@ server.get<{
 }>("/transactions", findTransactionByAccountId);
 
 server.listen(
-  { port: process.env.APP_PORT ? Number(process.env.APP_PORT) : 3000 },
+  {
+    port: process.env.APP_PORT ? Number(process.env.APP_PORT) : 3000,
+    host: "0.0.0.0",
+  },
   (err, address) => {
     if (err) {
       console.error(err);
