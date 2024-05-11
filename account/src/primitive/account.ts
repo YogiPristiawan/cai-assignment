@@ -1,5 +1,3 @@
-export enum AccountType {
-  Debit = 1,
-  Credit,
-  Loan,
-}
+import { AccountType as PrismaAccountType } from "@prisma/client";
+
+export type AccountType = PrismaAccountType;

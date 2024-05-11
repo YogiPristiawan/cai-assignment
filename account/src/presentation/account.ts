@@ -1,9 +1,16 @@
-import { FastifyReply } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 import { SessionRequest } from "supertokens-node/lib/build/framework/fastify";
-import FindAccountsByUserId from "@src/service/FindAccountsByUserId";
-import AccountRepo from "@src/repo/account";
+import { HttpError } from "../primitive/error";
 
-export function findAccounts(req: SessionRequest, res: FastifyReply) {
+import FindAccountsByUserId from "@src/service/FindAccountsByUserId";
+import GetAccountById from "@src/service/GetAccountById";
+import BalanceProcessing from "@src/service/BalanceProcessing";
+
+import AccountRepo from "@src/repo/account";
+import TransactionRepo from "@src/repo/transactions";
+import { BalanceProcessingIn } from "@src/dto/account";
+
+export async function findAccounts(req: SessionRequest, res: FastifyReply) {
   try {
     if (!req.session) {
       return res
@@ -16,7 +23,7 @@ export function findAccounts(req: SessionRequest, res: FastifyReply) {
 
     const service = new FindAccountsByUserId(AccountRepo);
 
-    const result = service.exec(userId);
+    const result = await service.exec(userId);
 
     return res.code(200).header("Content-Type", "application/json").send({
       message: "success",
@@ -27,5 +34,88 @@ export function findAccounts(req: SessionRequest, res: FastifyReply) {
       .code(500)
       .header("Content-Type", "application/json")
       .send({ message: "Internal server error" });
+  }
+}
+
+export async function getAccountById(
+  req: SessionRequest<FastifyRequest<{ Params: { accountId: string } }>>,
+  res: FastifyReply,
+) {
+  try {
+    if (!req.session) {
+      return res
+        .code(401)
+        .header("Content-Type", "application/json")
+        .send({ message: "unauthorize" });
+    }
+
+    const userId = req.session.getUserId();
+    const accountId = req.params.accountId;
+
+    const service = new GetAccountById(AccountRepo, TransactionRepo);
+    const result = await service.exec(userId, accountId);
+
+    return res
+      .code(200)
+      .header("Content-Type", "application/json")
+      .send({ message: "success", data: result });
+  } catch (err) {
+    const e = err as Error;
+    if (e instanceof HttpError) {
+      return res
+        .code(e.statusCode)
+        .header("Content-Type", "application/json")
+        .send({ message: e.message });
+    }
+
+    console.log(e);
+
+    return res
+      .code(500)
+      .header("Content-Type", "application/json")
+      .send({ message: "internal server error" });
+  }
+}
+
+export async function balanceProcessing(
+  req: SessionRequest<FastifyRequest<{ Body: BalanceProcessingIn }>>,
+  res: FastifyReply,
+) {
+  try {
+    if (!req.body) {
+      return res
+        .code(400)
+        .header("Content-Type", "application/json")
+        .send({ message: "body is required" });
+    }
+
+    const service = new BalanceProcessing(AccountRepo);
+    const result = await service.exec({
+      transactionId: req.body.transactionId ?? "",
+      userId: req.body.userId ?? "",
+      accountId: req.body.accountId ?? "",
+      amount: req.body.amount,
+      transactionType: req.body.transactionType,
+    });
+
+    return res
+      .code(201)
+      .header("Content-Type", "application/json")
+      .send({ message: "success", data: result });
+  } catch (err) {
+    const e = err as Error;
+    if (e instanceof HttpError) {
+      return res
+        .code(e.statusCode)
+        .header("Content-Type", "application/json")
+        .send({ messaeg: e.message });
+    }
+
+    console.log(e);
+
+    return res
+      .code(500)
+      .header("Content-Type", "application/json")
+      .send({ message: "internal server error" });
   }
 }

@@ -1,0 +1,4 @@
+include:
+  - account/docker-compose.yml
+  - transaction/docker-compose.yml
+  - auth/docker-compose.yml

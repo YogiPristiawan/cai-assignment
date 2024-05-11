@@ -1,22 +1,79 @@
 services:
-  postgres:
-    container_name: postgres
-    image: postgres:13.14-bullseye
+  account-db:
+    image: postgres:15.6-bullseye
+    container_name: account-db
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRESQL_USER}
-      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
-      POSTGRES_DB: ${POSTGRESQL_DB}
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
     env_file:
       - .env
+    environment:
+      POSTGRES_USER: ${POSTGRESQL_USER:?err}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD:?err}
+      POSTGRES_DB: ${POSTGRESQL_DB:?err}
+    # volumes:
+    #   - account-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: "pg_isready -U ${POSTGRESQL_USER:?err} -d ${POSTGRESQL_DB:?err}"
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
-      - assignment
+      - account
+      - app_network
+
+  account-migration:
+    image: account-migration
+    container_name: account-migration
+    env_file:
+      - .env
+    build:
+      context: ./prisma
+      args:
+        POSTGRESQL_URL: ${POSTGRESQL_URL}
+    depends_on:
+      account-db:
+        condition: service_healthy
+    networks:
+      - account
+
+  account-service:
+    image: account-service
+    container_name: account-service
+    build:
+      context: .
+    depends_on:
+      account-migration:
+        condition: service_completed_successfully
+      account-db:
+        condition: service_healthy
+      supertokens:
+        condition: service_healthy
+    env_file:
+      - .env
+    ports:
+      - ${APP_PORT:?err}:${APP_PORT:?err}
+    environment:
+      POSTGRESQL_URL: ${POSTGRESQL_URL:?err}
+      SUPERTOKENS_URI: ${SUPERTOKENS_URI:?err}
+      SUPERTOKENS_WEBSITE_DOMAIN: ${SUPERTOKENS_WEBSITE_DOMAIN:?err}
+      SUPERTOKENS_API_DOMAIN: ${SUPERTOKENS_API_DOMAIN:?err}
+      APP_NAME: ${APP_NAME:?err}
+      APP_PORT: ${APP_PORT:?err}
+      TRANSACTION_SERVICE_URI: ${TRANSACTION_SERVICE_URI:?err}
+    healthcheck:
+      test: "curl -f http://localhost:3000/ping"
+      interval: 200s
+      timeout: 3s
+      retries: 5
+    networks:
+      - account
+      - app_network
+    restart: unless-stopped
 
 networks:
-  assignment:
+  account:
     driver: bridge
-
-volumes:
-  postgres-data:
+  app_network:
+    driver: bridge
+# volumes:
+#   account-db-data:
+#     external: false

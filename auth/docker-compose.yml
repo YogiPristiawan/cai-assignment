@@ -1,0 +1,53 @@
+services:
+  auth-db:
+    image: postgres:15.6-bullseye
+    container_name: auth-db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRESQL_USER:?err}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD:?err}
+      POSTGRES_DB: ${POSTGRESQL_DB?:err}
+    # volumes:
+    #   - auth-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: "pg_isready -U ${POSTGRESQL_USER:?err} -d ${POSTGRESQL_DB:?err}"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - auth
+      - app_network
+
+  supertokens:
+    image: registry.supertokens.io/supertokens/supertokens-postgresql
+    container_name: supertokens-service
+    depends_on:
+      auth-db:
+        condition: service_healthy
+    ports:
+      - 3567:3567
+    env_file:
+      - .env
+    environment:
+      POSTGRESQL_CONNECTION_URI: ${POSTGRESQL_CONNECTION_URI:?err}
+    networks:
+      - auth
+      - app_network
+    restart: unless-stopped
+    healthcheck:
+      test: >
+        bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  auth:
+    driver: bridge
+  app_network:
+    driver: bridge
+# volumes:
+#   auth-db-data:
+#     external: false
