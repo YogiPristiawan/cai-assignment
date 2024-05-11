@@ -42,6 +42,7 @@ class TransactionRepo {
       headers: {
         // TODO: put api key here
         "Content-Type": "application/json",
+        "x-api-key": env.TRANSACTION_API_KEY ?? "",
       },
     });
 

@@ -2,3 +2,11 @@ include:
   - account/docker-compose.yml
   - transaction/docker-compose.yml
   - auth/docker-compose.yml
+services:
+  api-documentation:
+    image: api-documentation
+    container_name: api-documentation
+    build:
+      context: ./docs/swagger
+    ports:
+      - 80:80

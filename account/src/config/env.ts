@@ -1,3 +1,6 @@
 export default {
   TRANSACTION_SERVICE_URI: process.env.TRANSACTION_SERVICE_URI,
+  TRANSACTION_API_KEY: process.env.TRANSACTION_API_KEY,
+
+  APP_SECRET: process.env.APP_SECRET,
 };

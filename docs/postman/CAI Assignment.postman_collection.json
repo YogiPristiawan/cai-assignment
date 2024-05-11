@@ -97,7 +97,13 @@
 					"name": "Balance Processing",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{accountServiceApiKey}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"accountId\": \"128537f5-5cbe-45f2-b650-5efc7fec9b64\",\n    \"userId\": \"d186a3bc-4f33-4a79-b12c-e786b263011f\",\n    \"transactionType\": \"payment\",\n    \"amount\": 50000,\n    \"transactionId\": \"977bbb38-eb7f-4c0b-bcec-85f02ebe199b\"\n}",
@@ -264,7 +270,13 @@
 					"name": "Find Transaction by Account ID",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{transactionServiceApiKey}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{transactionService}}/transactions?userId=d186a3bc-4f33-4a79-b12c-e786b263011f&accountId=128537f5-5cbe-45f2-b650-5efc7fec9b64",
 							"host": [

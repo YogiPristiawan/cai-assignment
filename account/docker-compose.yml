@@ -58,7 +58,9 @@ services:
       SUPERTOKENS_API_DOMAIN: ${SUPERTOKENS_API_DOMAIN:?err}
       APP_NAME: ${APP_NAME:?err}
       APP_PORT: ${APP_PORT:?err}
+      APP_SECRET: ${APP_SECRET:?err}
       TRANSACTION_SERVICE_URI: ${TRANSACTION_SERVICE_URI:?err}
+      TRANSACTION_API_KEY: ${TRANSACTION_API_KEY:?err}
     healthcheck:
       test: "curl -f http://localhost:3000/ping"
       interval: 200s

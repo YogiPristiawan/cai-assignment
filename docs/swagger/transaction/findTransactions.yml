@@ -3,6 +3,9 @@ get:
     - Transaction
   summary: Find transaction histories by the given filters
   description: This is an internal API used for communication between servers, enabling interaction between each service.
+  operationId: findTransactions
+  security:
+    - X-Api-Key: []
   parameters:
     - in: query
       name: userId

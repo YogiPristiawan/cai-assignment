@@ -14,6 +14,8 @@ import {
   getAccountById,
 } from "@src/presentation/account";
 
+import apiKeyMiddleware from "@src/middleware/apiKey";
+
 import AccountRepo from "@src/repo/account";
 import CreateAccount from "@src/service/CreateAccount";
 
@@ -90,6 +92,7 @@ server.get<{ Params: { accountId: string } }>(
 
 server.post<{ Body: BalanceProcessingIn }>(
   "/balance-processing",
+  { preHandler: apiKeyMiddleware },
   // TODO: middleware
   balanceProcessing,
 );
