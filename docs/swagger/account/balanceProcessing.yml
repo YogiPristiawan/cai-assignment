@@ -4,6 +4,8 @@ post:
   summary: Calculate user balance
   description: This is an internal API used for communication between servers, enabling interaction between each service.
   operationId: balanceProcessing
+  security:
+    - X-Api-Key: []
   requetBody:
     required: true
     content:
