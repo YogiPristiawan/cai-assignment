@@ -44,6 +44,7 @@ class AccountRepo {
       headers: {
         // TODO: put api key here
         "Content-Type": "application/json",
+        "x-api-key": env.ACCOUNT_API_KEY ?? "",
       },
       body: JSON.stringify(payload),
     });
@@ -81,6 +82,7 @@ class AccountRepo {
       headers: {
         // TODO: put api key here
         "Content-Type": "application/json",
+        "x-api-key": env.ACCOUNT_API_KEY ?? "",
       },
       body: JSON.stringify(payload),
     });
@@ -118,6 +120,7 @@ class AccountRepo {
       headers: {
         // TODO: put api key here
         "Content-Type": "application/json",
+        "x-api-key": env.ACCOUNT_API_KEY ?? "",
       },
       body: JSON.stringify(payload),
     });

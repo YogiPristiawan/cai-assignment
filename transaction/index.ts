@@ -20,6 +20,8 @@ import {
   withdraw,
 } from "@src/presentation/transaction";
 
+import apiKeyMiddleware from "@src/middleware/apiKey";
+
 import Session from "supertokens-node/recipe/session";
 import { plugin as supertokenPlugin } from "supertokens-node/framework/fastify";
 import supertokens from "supertokens-node";
@@ -76,8 +78,11 @@ server.post<{ Body: WithdrawIn }>(
 
 server.get<{
   Querystring: { userId: string; accountId: string };
-  // TODO: middleware
-}>("/transactions", findTransactionByAccountId);
+}>(
+  "/transactions",
+  { preHandler: apiKeyMiddleware },
+  findTransactionByAccountId,
+);
 
 server.listen(
   {
