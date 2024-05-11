@@ -1,0 +1,293 @@
+{
+	"info": {
+		"_postman_id": "d0714d1b-30a4-4b3f-b3ed-90dd14fded97",
+		"name": "CAI Assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13060418"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Sign Up",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"formFields\": [\n        {\n            \"id\": \"email\",\n            \"value\": \"example@email.com\"\n        },\n        {\n            \"id\": \"password\",\n            \"value\": \"Password321\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{accountService}}/auth/signup",
+							"host": [
+								"{{accountService}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find All Accounts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{accountService}}/accounts",
+							"host": [
+								"{{accountService}}"
+							],
+							"path": [
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign In",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"formFields\": [\n        {\n            \"id\": \"email\",\n            \"value\": \"example@email.com\"\n        },\n        {\n            \"id\": \"password\",\n            \"value\": \"Password321\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{accountService}}/auth/signin",
+							"host": [
+								"{{accountService}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Balance Processing",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountId\": \"128537f5-5cbe-45f2-b650-5efc7fec9b64\",\n    \"userId\": \"d186a3bc-4f33-4a79-b12c-e786b263011f\",\n    \"transactionType\": \"payment\",\n    \"amount\": 50000,\n    \"transactionId\": \"977bbb38-eb7f-4c0b-bcec-85f02ebe199b\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{accountService}}/balance-processing",
+							"host": [
+								"{{accountService}}"
+							],
+							"path": [
+								"balance-processing"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Account by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{accountService}}/accounts/ec83f2a2-9b5c-4c3f-9b14-47572edb1550",
+							"host": [
+								"{{accountService}}"
+							],
+							"path": [
+								"accounts",
+								"ec83f2a2-9b5c-4c3f-9b14-47572edb1550"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "Deposit",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 30000,\n    \"accountId\": \"ec83f2a2-9b5c-4c3f-9b14-47572edb1550\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{transactionService}}/deposit",
+							"host": [
+								"{{transactionService}}"
+							],
+							"path": [
+								"deposit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 10000,\n    \"accountId\": \"ec83f2a2-9b5c-4c3f-9b14-47572edb1550\"\n}   ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{transactionService}}/send",
+							"host": [
+								"{{transactionService}}"
+							],
+							"path": [
+								"send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Withdraw",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 5000,\n    \"accountId\": \"ec83f2a2-9b5c-4c3f-9b14-47572edb1550\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{transactionService}}/withdraw",
+							"host": [
+								"{{transactionService}}"
+							],
+							"path": [
+								"withdraw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Transaction by Account ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{transactionService}}/transactions?userId=d186a3bc-4f33-4a79-b12c-e786b263011f&accountId=128537f5-5cbe-45f2-b650-5efc7fec9b64",
+							"host": [
+								"{{transactionService}}"
+							],
+							"path": [
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "d186a3bc-4f33-4a79-b12c-e786b263011f"
+								},
+								{
+									"key": "accountId",
+									"value": "128537f5-5cbe-45f2-b650-5efc7fec9b64"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
