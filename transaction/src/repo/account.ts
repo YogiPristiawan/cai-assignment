@@ -22,6 +22,8 @@ class AccountRepo {
   public async createDeposit(
     param: CreateDepositIn,
   ): Promise<CreateDepositOut> {
+    // WARN: imagine long running process here
+    console.log("processing transaction", param);
     await new Promise((resolve) => {
       setTimeout(() => {
         resolve(true);
@@ -51,20 +53,20 @@ class AccountRepo {
     if (!response.ok) {
       throw new Error(json.message);
     }
+    console.log("transaction processed successfully", param);
 
     return param;
-
-    // return new Promise((resolve, reject) => {
-    //   console.log("Processing for:", param);
-    //
-    //   setTimeout(() => {
-    //     console.log("Processed transaction for:", param);
-    //     resolve(param);
-    //   }, 10000);
-    // });
   }
 
   public async sendPayment(param: SendPaymentIn): Promise<SendPaymentOut> {
+    // WARN: imagine long running process here
+    console.log("processing transaction", param);
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(true);
+      }, 10000);
+    });
+
     const url = `${env.ACCOUNT_SERVICE_URI}/balance-processing`;
     const payload = {
       userId: param.userId,
@@ -88,20 +90,20 @@ class AccountRepo {
     if (!response.ok) {
       throw new Error(json.message);
     }
+    console.log("transaction processed successfully", param);
 
     return param;
-
-    // return new Promise((resolve, reject) => {
-    //   console.log("Processing for:", param);
-    //
-    //   setTimeout(() => {
-    //     console.log("Processed transaction for:", param);
-    //     resolve(param);
-    //   }, 10000);
-    // });
   }
 
   public async withdraw(param: WithdrawIn): Promise<WithdrawOut> {
+    // WARN: imagine long running process here
+    console.log("processing transaction", param);
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(true);
+      }, 10000);
+    });
+
     const url = `${env.ACCOUNT_SERVICE_URI}/balance-processing`;
     const payload = {
       userId: param.userId,
@@ -126,16 +128,9 @@ class AccountRepo {
       throw new Error(json.message);
     }
 
-    return param;
+    console.log("transaction processed successfully", param);
 
-    // return new Promise((resolve, reject) => {
-    //   console.log("Processing for:", param);
-    //
-    //   setTimeout(() => {
-    //     console.log("Processed transaction for:", param);
-    //     resolve(param);
-    //   }, 10000);
-    // });
+    return param;
   }
 }
 

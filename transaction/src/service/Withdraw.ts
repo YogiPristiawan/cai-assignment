@@ -23,6 +23,13 @@ interface IAccountRepo {
   withdraw(param: AccountModelWithdrawIn): Promise<AccountModelWithdrawOut>;
 }
 
+type ProcessTransactionParam = {
+  userId: string;
+  transactionId: string;
+  accountId: string;
+  amount: number;
+};
+
 export default class Withdraw {
   private _transactionRepo: ITransactionRepo;
   private _accountRepo: IAccountRepo;
@@ -41,30 +48,40 @@ export default class Withdraw {
       amount: payload.amount,
     });
 
-    try {
-      // NOTE: would be better if we send it to MQ instead of synchronous call like this
-      await this._accountRepo.withdraw({
-        userId: userId,
-        transactionId: transaction.transactionId,
-        accountId: payload.accountId,
-        amount: payload.amount,
-      });
-
-      await this._transactionRepo.updateTransactionStatus({
-        transactionId: transaction.transactionId,
-        status: "success",
-      });
-    } catch (err) {
-      await this._transactionRepo.updateTransactionStatus({
-        transactionId: transaction.transactionId,
-        status: "failed",
-      });
-    }
+    // call account service
+    // NOTE: would be better if we send long running process like this to MQ instead of using asynchronous functions call like this
+    this.processTransaction({
+      userId: userId,
+      transactionId: transaction.transactionId,
+      accountId: payload.accountId,
+      amount: payload.amount,
+    });
 
     return {
       transactionId: transaction.transactionId,
       amount: transaction.amount,
     };
+  }
+
+  private async processTransaction(param: ProcessTransactionParam) {
+    try {
+      await this._accountRepo.withdraw({
+        userId: param.userId,
+        transactionId: param.transactionId,
+        accountId: param.accountId,
+        amount: param.amount,
+      });
+
+      await this._transactionRepo.updateTransactionStatus({
+        transactionId: param.transactionId,
+        status: "success",
+      });
+    } catch (err) {
+      await this._transactionRepo.updateTransactionStatus({
+        transactionId: param.transactionId,
+        status: "failed",
+      });
+    }
   }
 
   private validatePayload(payload: WithdrawIn) {

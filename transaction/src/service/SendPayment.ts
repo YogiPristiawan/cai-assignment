@@ -8,7 +8,6 @@ import {
   SendPaymentOut as AccountModelSendPaymentOut,
 } from "../model/account";
 import { SendPaymentIn, SendPaymentOut } from "../dto/transaction";
-import { TransactionStatus } from "../primitive/transaction";
 import { BadRequestError } from "@src/primitive/error";
 
 interface ITransactionRepo {
@@ -21,6 +20,13 @@ interface IAccountRepo {
     param: AccountModelSendPaymentIn,
   ): Promise<AccountModelSendPaymentOut>;
 }
+
+type ProcessTransactionParam = {
+  userId: string;
+  transactionId: string;
+  accountId: string;
+  amount: number;
+};
 
 export default class SendPayment {
   private _transactionRepo: ITransactionRepo;
@@ -45,30 +51,40 @@ export default class SendPayment {
     });
 
     // call account service
-    try {
-      // NOTE: would be better if we send it to MQ instead of synchronous call like this
-      await this._accountRepo.sendPayment({
-        userId: userId,
-        transactionId: transaction.transactionId,
-        accountId: payload.accountId,
-        amount: payload.amount,
-      });
-
-      await this._transactionRepo.updateTransactionStatus({
-        transactionId: transaction.transactionId,
-        status: "success",
-      });
-    } catch (err) {
-      await this._transactionRepo.updateTransactionStatus({
-        transactionId: transaction.transactionId,
-        status: "failed",
-      });
-    }
+    // NOTE: would be better if we send long running process like this to MQ instead of using asynchronous functions call like this
+    this.processTransaction({
+      userId: userId,
+      transactionId: transaction.transactionId,
+      accountId: payload.accountId,
+      amount: payload.amount,
+    });
 
     return {
       transactionId: transaction.transactionId,
       amount: transaction.amount,
     };
+  }
+
+  // NOTE: this function contain example of long running process
+  private async processTransaction(param: ProcessTransactionParam) {
+    try {
+      await this._accountRepo.sendPayment({
+        userId: param.userId,
+        transactionId: param.transactionId,
+        accountId: param.accountId,
+        amount: param.amount,
+      });
+
+      await this._transactionRepo.updateTransactionStatus({
+        transactionId: param.transactionId,
+        status: "success",
+      });
+    } catch (err) {
+      await this._transactionRepo.updateTransactionStatus({
+        transactionId: param.transactionId,
+        status: "failed",
+      });
+    }
   }
 
   private validatePayload(payload: SendPaymentIn) {
